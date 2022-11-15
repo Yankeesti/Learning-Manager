@@ -23,10 +23,11 @@ public class Semester {
 		startAndEnd = new Date[2];
 		startAndEnd[0] = semesterStart;
 		startAndEnd[1] = semesterEnd;
-		
+		Date startMonday = getMonday(semesterStart);
 		weeks = new Week[berechnungWochenAnzahl(semesterStart, semesterEnd)];
 		for(int i = 0; i<weeks.length; i++) {
-			weeks[i] = new Week();
+			weeks[i] = new Week(startMonday,i);
+			startMonday.setDate(startMonday.getDate()+7);
 		}
 	}
 	

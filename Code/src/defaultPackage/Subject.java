@@ -8,18 +8,18 @@ public class Subject {
 	ArrayList<Homework> homework;
 	ArrayList<LearningPhase> learningPhases;
 	ArrayList<Appointment> appointments;
-	
 	LearningPhase aktLPhase;
-	
-	Subject(){
+	String subjectName;
+	Subject(String subjectName){
 		homework = new ArrayList<Homework>();
 		learningPhases = new ArrayList<LearningPhase>();
 		appointments = new ArrayList<Appointment>();
 		aktLPhase = null;
+		this.subjectName = subjectName;
 	}
 	
 	public void startLearningPhase() {
-		aktLPhase = new LearningPhase();
+		aktLPhase = new LearningPhase(subjectName);
 		learningPhases.add(aktLPhase);
 	}
 	/**

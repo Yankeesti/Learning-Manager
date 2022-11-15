@@ -10,10 +10,12 @@ public class LearningPhase {
 	Date ended;
 	long learned;// Time learned in Seconds
 	ArrayList<String> notes;
+	String subject;
 	
-	public LearningPhase() {
+	public LearningPhase(String subject) {
 		started = getAktDate();
 		notes = new ArrayList<String>();
+		this.subject = subject;
 	}
 	
 	public void finish() {
@@ -41,6 +43,10 @@ public class LearningPhase {
 		outPut.setSeconds(now.getSecond());
 		
 		return outPut;
+	}
+
+	public String getSubject() {
+		return subject;
 	}
 	
 }
