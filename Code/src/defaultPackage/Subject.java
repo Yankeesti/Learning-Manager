@@ -10,6 +10,8 @@ public class Subject {
 	ArrayList<Appointment> appointments;
 	LearningPhase aktLPhase;
 	String subjectName;
+	
+	
 	Subject(String subjectName){
 		homework = new ArrayList<Homework>();
 		learningPhases = new ArrayList<LearningPhase>();
@@ -18,9 +20,10 @@ public class Subject {
 		this.subjectName = subjectName;
 	}
 	
-	public void startLearningPhase() {
+	public LearningPhase startLearningPhase() {
 		aktLPhase = new LearningPhase(subjectName);
 		learningPhases.add(aktLPhase);
+		return aktLPhase;
 	}
 	/**
 	 * 
@@ -60,5 +63,6 @@ public class Subject {
 	}
 	
 	//getter and setter
+	public String getSubjectName() {return subjectName;}
 	public void setWeekGoal(int goal) { weekGoal = goal; }
 }

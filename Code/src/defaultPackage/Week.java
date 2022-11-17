@@ -27,4 +27,9 @@ public class Week {
 		}
 		return outPut;
 	}
+
+	public void addLearningPhase(LearningPhase currentLearningPhase) {
+		learningPhases.add(currentLearningPhase);
+		
+	}
 }
