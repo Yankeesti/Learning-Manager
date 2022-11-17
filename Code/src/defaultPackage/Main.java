@@ -1,4 +1,5 @@
 package defaultPackage;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -6,16 +7,13 @@ import java.util.Date;
 public class Main {
 
 	public static void main(String[] args) {
-		LearningPhase test = new LearningPhase();
-		try {
-			Thread.sleep(2300);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		test.finish();
+	
+		Week p = new Week(2022,11,22,3);
 		
-		System.out.println(test.getLearned());
+		Date temp = new Date(2022,10,18);
+		
+		System.out.println(p.dayIncluded(temp));
+		
 		
 	}
 	

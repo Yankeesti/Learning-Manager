@@ -17,6 +17,7 @@ public class Homework {
 	public void addNote(String note) {
 		notes.append("\n" + note);
 	}
+	
 	public void finish() {
 		done = true;
 	}

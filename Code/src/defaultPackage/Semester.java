@@ -1,10 +1,11 @@
 package defaultPackage;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class Semester {
+public class Semester extends Date{
 	int semester;
-	Subject subjects[];
-	Date startAndEnd[];
+	ArrayList<Subject> subjects;
+	Date semesterEnd;
 	Week weeks[];
 	
 	
@@ -18,30 +19,60 @@ public class Semester {
 	 * angelegt wird
 	 */
 	public Semester(int semester, Date semesterStart, Date semesterEnd) {
+		super();
+		setTime(semesterStart.getTime());
 		this.semester = semester;
-		
-		startAndEnd = new Date[2];
-		startAndEnd[0] = semesterStart;
-		startAndEnd[1] = semesterEnd;
+		this.semesterEnd = semesterEnd;
 		Date startMonday = getMonday(semesterStart);
 		weeks = new Week[berechnungWochenAnzahl(semesterStart, semesterEnd)];
 		for(int i = 0; i<weeks.length; i++) {
 			weeks[i] = new Week(startMonday,i);
 			startMonday.setDate(startMonday.getDate()+7);
 		}
-	}
-	
-	public Semester(int semester,int amountOfSubjects, Date semesterStart, Date semesterEnd) {
-		new Semester(semester,semesterStart,semesterEnd);
-		subjects = new Subject[amountOfSubjects];
+		subjects = new ArrayList<Subject>();
 	}
 	
 	public Semester(int semester,Subject[] subjects, Date semesterStart, Date semesterEnd) {
 		new Semester(semester,semesterStart,semesterEnd);
-		this.subjects = subjects;
+		for(Subject i: subjects) {
+			this.subjects.add(i);
+		}
 	}
 	
 	
+	//Getter and Setter
+	
+	/**
+	 * 
+	 * @return all subjects in a array
+	 */
+	public Subject[] getSubjects() {
+		Subject[] outPut = new Subject[subjects.size()];
+		for(int i = 0; i<outPut.length;i++) {
+			outPut[i] = subjects.get(i);
+		}
+		return outPut;
+	}
+	
+	/**
+	 * adds p to subjects
+	 * @param p
+	 */
+	public void addSubject(Subject p) {
+		subjects.add(p);
+	}
+	
+	/**
+	 * @param Date to find Week where it belongs to
+	 * @return the Week where p is in and null when the week isn't in this Semester
+	 */
+	public Week getWeek(Date p) {
+		int weeksAppart = weeks[0].dayIncluded(p);
+		if(weeksAppart>= 0 && weeksAppart < weeks.length) { //Date is in this Semester
+			return weeks[weeksAppart];
+		}
+		return null;
+	}
 	
 	
 	
