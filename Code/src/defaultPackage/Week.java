@@ -9,6 +9,9 @@ public class Week extends Date{
 	int numberInSemester;
 	ArrayList<LearningPhase> learningPhases;
 	
+	
+	
+	
 	public Week(int year,int month, int date, int numberInSemester) {
 		this(getMonday(year, month, date),numberInSemester);
 	}
@@ -28,7 +31,7 @@ public class Week extends Date{
 	public long learnedFor(String subject){
 		long outPut =0;
 		for(int i = 0; i<learningPhases.size();i++) {
-			if(learningPhases.get(i).getSubject() == subject) {
+			if(learningPhases.get(i).getSubjectName().equals(subject)) {
 				outPut += learningPhases.get(i).getLearned();
 			}
 		}
@@ -78,6 +81,7 @@ public class Week extends Date{
 		return outPut;
 	}
 	
+	
 	/**
 	 * @param tag
 	 * @return The Monday of the week where tag is included
@@ -100,5 +104,45 @@ public class Week extends Date{
 	private static Date getMonday(int year,int month, int date) {
 		Date temp = new Date(year,month,date);
 		return getMonday(temp);
+	}
+	
+	//Methods to safe and load Data
+	
+	/**
+	 * returns a String Array with the data of the Week in the following way
+	 * [0] = "WEB";starting Monday;numberInSemester;Ammount of LearningPhases
+	 * [1] = LearningPhase
+	 * [2] = LearningPhase
+	 * [3] = LearningPhase
+	 * ...
+	 * @return String Array with Data
+	 */
+	public String[] dataToString() {
+		String[] outPut = new String[learningPhases.size()+1];
+		outPut[0] = "WEB"+";"+getTime()+";"+numberInSemester+";"+learningPhases.size();
+		for(int i = 0; i<learningPhases.size();i++) {
+			outPut[i+1] = learningPhases.get(i).dataToString();
+		}
+		return outPut;
+	}
+	
+	public Week(String[] data) {
+		String[] dataSplitted = data[0].split(";");
+		setTime(Long.parseLong(dataSplitted[1]));
+		numberInSemester = Integer.parseInt(dataSplitted[2]);
+		learningPhases = new ArrayList<LearningPhase>();
+		for(int i = 1; i<data.length;i++) {
+			learningPhases.add(new LearningPhase(data[i], false));
+		}
+		
+		
+	}
+	
+	public LearningPhase[] getLearningPhases() {
+		LearningPhase[] outPut = new LearningPhase[learningPhases.size()];
+		for(int i = 0; i<outPut.length;i++) {
+			outPut[i] = learningPhases.get(i);
+		}
+		return outPut;
 	}
 }

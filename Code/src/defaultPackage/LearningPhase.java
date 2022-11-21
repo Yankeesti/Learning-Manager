@@ -18,6 +18,13 @@ public class LearningPhase {
 		this.subject = subject;
 	}
 	
+	public LearningPhase(String subject, Date start, Date end) {
+		this.subject = subject;
+		started = start;
+		ended = end;
+		learned =  (end.getTime()-start.getTime())/1000;
+	}
+	
 	public void finish() {
 		ended = getAktDate();
 		learned =  (ended.getTime()-started.getTime())/1000;
@@ -45,8 +52,36 @@ public class LearningPhase {
 		return outPut;
 	}
 
-	public String getSubject() {
+	public String getSubjectName() {
 		return subject;
 	}
 	
+	//Methods to safe and load Data
+	
+	/**
+	 * creates a learning phase with the given data
+	 * p is irrelevant and just there to make sure the right Constructor is used
+	 * @param data
+	 */
+	public LearningPhase(String data,boolean p) {
+		String[] dataSplitted = data.split(";");
+		
+		started = new Date();
+		started.setTime(Long.parseLong(dataSplitted[1]));
+		
+		ended = new Date();
+		ended.setTime(Long.parseLong(dataSplitted[2]));
+		
+		learned = Long.parseLong(dataSplitted[3]);
+		
+		subject = dataSplitted[4];
+	}
+	
+	/**
+	 * outPuts data of learning Phase in the following order LP:started;ended;learned;subject
+	 * @return data of object
+	 */
+	public String dataToString() {
+		return "LP;"+started.getTime()+";"+ended.getTime()+";"+learned+";"+subject;
+	}
 }
