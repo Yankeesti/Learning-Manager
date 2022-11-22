@@ -16,64 +16,140 @@ public class Main {
 	public static void main(String[] args) {
 		loadFiles();
 		study = new Interface(file1);
-//		
-		Date start = new Date(2022, 11, 2, 10, 0);
-		Date end = new Date(2022, 11, 2, 13, 0);
-		study.addLearningPhase(3, "Elektrotechnik", start, end);
-		study.safeData(file1);
-		
-		System.out.println("Hallo");
-//		while(true) {
-//			System.out.println("was möchten sie tuen\n");
-//			System.out.println("1 : Lern Phase starten");
-//			System.out.println("2 : Lern Phase beenden");
-//			System.out.println("3 : neues Semester Hinzufuegen");
-//			System.out.println("4 : neues Fach Hinzufuegen");
-//			System.out.println("5 : WochenZiel für ein Fach ändern");
-//			System.out.println("6 : Aktuelles Semester ändern");
-//			System.out.println("7 : Daten Speichern");
-//			
-//			int auswahl = abfrageInt("");
-//			switch(auswahl) {
-//			case 1:
-//				startLearningPhase();
-//				break;
-//			case 2:
-//				break;
-//			case 3:
-//				break;
-//			case 4:
-//				break;
-//			case 5:
-//				break;
-//			case 6:
-//				setSemester();
-//				break;
-//			case 7:
-//				break;
-//			
-//			
-//			}
-//		}
+
+		end:
+		while(true) {
+			System.out.println("\nwas möchten sie tuen\n");
+			System.out.println("1 : Lern Phase starten");
+			System.out.println("2 : Lern Phase beenden");
+			System.out.println("3 : neues Semester Hinzufuegen");
+			System.out.println("4 : neues Fach Hinzufuegen");
+			System.out.println("5 : WochenZiel für ein Fach ändern");
+			System.out.println("6 : Daten Speichern");
+			System.out.println("7 : Program abrechen");
+			
+			
+			int auswahl = abfrageInt("");
+			switch(auswahl) {
+			case 1:
+				startLearningPhase();
+				break;
+			case 2:
+				finishLearningPhase();
+				break;
+			case 3:
+				addNewSemester();
+				break;
+			case 4:
+				addNewSubject();
+				break;
+			case 5:
+				changeWeekGoal();
+				break;
+			case 6:
+				safeData();
+				break;
+			case 7:
+				break end;
+			
+			
+			}
+		}
 	
 	}
 	
+
+	
+
+
+	
+
+	
+
+	
+
+	
+
 	//Methods to use interface
 	
 	public static void startLearningPhase() {
-		//check weather current Semester is set
-		if(!study.isCurrentSemesterSet()) {
-			System.out.println("Du musst zur erst festlegen in welchem Semester du dich aktuell befindest");
-			setSemester();
+		System.out.println("\nfür welches Fach möchten Sie lernen?\n");
+		Subject[] subjectOptions = study.getCurrentSubjects();
+		for(int i = 0 ; i<subjectOptions.length;i++) {
+			System.out.println(i+1+" : "+ subjectOptions[i].getSubjectName());
 		}
-		System.out.println("\nfür welches Fach möchten Sie lernen?");
+		int selection = abfrageInt("", 1, subjectOptions.length);
+		study.startLearningPhase(subjectOptions[selection-1].getSubjectName());
+	}
+	
+	private static void finishLearningPhase() {
+		if(study.finishLearningPhase()) {
+			System.out.println("\nLernPhase wurde beendet");
+		}else {
+			System.out.println("\nes gibt keine Lern Phase zum beenden");
+		}
+			
+	}
+	
+	private static void addNewSemester() {
+		System.out.println("Geben sie das Start-Datum des Semesters in Folgender Syntax an: Jahr-Monat-Tag");
+		 Date start = null;
+		 Date end=null;
+		boolean inputRight = false;
+		while(!inputRight) {
+			 String input= abfrageString("");
+			 String[] inputSplitted = input.split("-");
+			
+			 try {
+				 start = new Date(Integer.parseInt(inputSplitted[0])-1900,Integer.parseInt(inputSplitted[1]),Integer.parseInt(inputSplitted[2]));
+				 inputRight = true;
+			 }
+			 catch(NumberFormatException e) {
+				 System.err.println("geben sie das Datum in folgendem Format an Jahr-Monat-Tag");
+				 inputRight = false;
+			 }
+		}
 		
+		System.out.println("Geben sie das End-Datum des Semesters in Folgender Syntax an: Jahr-Monat-Tag");
+		 inputRight = false;
+		while(!inputRight) {
+			 String input= abfrageString("");
+			 String[] inputSplitted = input.split("-");
+			 try {
+				 end = new Date(Integer.parseInt(inputSplitted[0])-1900,Integer.parseInt(inputSplitted[1]),Integer.parseInt(inputSplitted[2]));
+				 inputRight = true;
+			 }
+			 catch(NumberFormatException e) {
+				 System.err.println("geben sie das Datum in folgendem Format an Jahr-Monat-Tag");
+				 inputRight = false;
+			 }
+		}
+		
+		study.addSemester(abfrageInt("Um Welches Semester Handelt es sich"), start, end);
 		
 	}
 	
-	private static void setSemester() {
-		abfrageInt("für welches semester lernenst du momentan?");
-		study.setCurrentSemester(abfrageInt(""));
+	private static void addNewSubject() {
+		study.addSubject(abfrageInt("Zu welchem Semester gehört das Fach"), abfrageString("wie heißt dasFach"));
+		
+	}
+	
+	private static void changeWeekGoal() {
+		Subject [] subjects = study.getSubjects();
+		
+		System.out.println("Für welches Fach möchten Sie das Lernziel anpassen?\n");
+		
+		for(int i = 0;i<subjects.length;i++) {
+			System.out.println(i+1+" : "+ subjects[i].getSubjectName());
+		}
+		
+		int auswahl = abfrageInt("", 1, subjects.length);
+		
+		study.setWeekGoal(subjects[auswahl-1].getSemester(), subjects[auswahl-1].getSubjectName(), abfrageInt("Wie viele Minuten möchten sie pro woche für "+subjects[auswahl-1].getSubjectName()+" lernen?"));
+	}
+	
+	private static void safeData() {
+		study.safeData(file1);
 	}
 
 	public static String abfrageString(String i) {
@@ -143,7 +219,7 @@ public class Main {
 	        output = abfrageInt(i);
 	      }
 		if(!(min<= output && output<= max))
-			return abfrageInt("Ihre zahl muss sich wischen "+ min +" und "+max+" befinden");
+			return abfrageInt("Ihre zahl muss sich wischen "+ min +" und "+max+" befinden",min,max);
 		return output;
 	}
 	

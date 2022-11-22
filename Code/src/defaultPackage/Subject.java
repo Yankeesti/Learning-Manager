@@ -10,14 +10,15 @@ public class Subject {
 	ArrayList<LearningPhase> learningPhases;
 	ArrayList<Appointment> appointments;
 	LearningPhase aktLPhase;
+	int semester ;
 	
-	
-	Subject(String subjectName){
+	Subject(String subjectName , int semester){
 		homework = new ArrayList<Homework>();
 		learningPhases = new ArrayList<LearningPhase>();
 		appointments = new ArrayList<Appointment>();
 		aktLPhase = null;
 		this.subjectName = subjectName;
+		this.semester = semester;
 		
 	}
 	
@@ -76,6 +77,7 @@ public class Subject {
 	//getter and setter
 	public String getSubjectName() {return subjectName;}
 	public void setWeekGoal(int goal) { weekGoal = goal; }
+	public int getSemester() {return semester;}
 	
 	//Methodes to safe and load Data
 	
@@ -95,17 +97,18 @@ public class Subject {
 		weekGoal = Integer.parseInt(dataSplitted[2]);
 		learnedThisWeek = Integer.parseInt(dataSplitted[3]);
 		subjectName = dataSplitted[4];
+		semester = Integer.parseInt(dataSplitted[5]);
 		
 	}
 	
 	/**
 	 * gives back a String with the following order
-	 * SUB;finalgrade;weekGoal;learnedThisWeek;subjectName
+	 * SUB;finalgrade;weekGoal;learnedThisWeek;subjectName;semester
 	 * 
 	 * @return Array of Strings with the data
 	 */
 	public String DataToString() {
-		String outPut = "SUB;"+finalGrade+";"+weekGoal+";"+learnedThisWeek+";"+subjectName;
+		String outPut = "SUB;"+finalGrade+";"+weekGoal+";"+learnedThisWeek+";"+subjectName+";"+semester;
 		return outPut;
 	}
 	
