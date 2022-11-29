@@ -68,6 +68,7 @@ public class Main {
 	//Methods to use interface
 	
 	public static void startLearningPhase() {
+		if(!study.runningLearningPhase()) {
 		System.out.println("\nfür welches Fach möchten Sie lernen?\n");
 		Subject[] subjectOptions = study.getCurrentSubjects();
 		for(int i = 0 ; i<subjectOptions.length;i++) {
@@ -75,6 +76,8 @@ public class Main {
 		}
 		int selection = abfrageInt("", 1, subjectOptions.length);
 		study.startLearningPhase(subjectOptions[selection-1].getSubjectName());
+		}else
+			System.err.println("\nThere is already a running Learning Phase\n");
 	}
 	
 	private static void finishLearningPhase() {

@@ -1,5 +1,6 @@
 package defaultPackage;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class TimePeriod extends Date{
@@ -24,6 +25,23 @@ public class TimePeriod extends Date{
 		this(startYear,startMonth,startDate);
 		this.endDate = new Date(endYear,endMonth,endDate);
 	}
+	
+	
+	/**
+	 * 
+	 * @param data - the 2nd and 3. String after splitting need to be the start end end Time
+	 */
+	public TimePeriod(String data) {
+		super();
+		String[] dataSplitted = data.split(";");
+		setTime(Long.parseLong(dataSplitted[1]));
+		long endTime = Long.parseLong(dataSplitted[2]);
+		if(endTime >= 0) {
+		endDate = new Date();
+		endDate.setTime(endTime);
+		}
+	}
+	
 	
 	
 	/**
@@ -88,10 +106,53 @@ public class TimePeriod extends Date{
 		}
 	}
 	
+	public void setEndTime(Date endDate) {
+		setEndTime(endDate.getTime());
+	}
+	
 	public Date getEndDate() {
 		return endDate;
 	}
 	
+	/**
+	 * Calculates the difference between start and end of the Time Period
+	 * @return - Difference in Ms
+	 */
+	public long getDiffrence() {
+		return endDate.getTime()-getTime();
+	}
+	
+	protected static Date getAktDate() {
+		Date outPut = new Date();
+		LocalDateTime now = LocalDateTime.now();  
+		
+		outPut.setYear(now.getYear()-1900);
+		outPut.setMonth(now.getMonthValue());
+		outPut.setHours(now.getHour());
+		outPut.setMinutes(now.getMinute());
+		outPut.setSeconds(now.getSecond());
+		
+		return outPut;
+	}
+	
+	/**
+	 * @param tag
+	 * @return denn Montag welcher in der gleichen woche liegt wie tag
+	 */
+	protected static Date getMonday(Date pDay) {
+		//Montag finden
+				Date Monday;
+				int day = pDay.getDay();
+				
+				//Da in der Date Klasse Sonntag an stelle 0 ist rücken wir hiermit den Montag auf stelle null
+				if(day == 0)// wenn sonntag = 6
+					day = 6;
+				else //initial für tag um eins nach hinten schieben um montag an 0 zu haben
+					day -= 1;
+				
+				Monday = new Date(pDay.getYear(),pDay.getMonth(),pDay.getDate()-day);
+				return Monday;
+	}
 	
 	
 }

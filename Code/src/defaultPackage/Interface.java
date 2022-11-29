@@ -159,6 +159,13 @@ public class Interface {
 	public Subject[] getCurrentSubjects() {
 		return currentSemester.getSubjects();
 	}
+	/**
+	 * 
+	 * @return true when there is a running learningPhase and false if not
+	 */
+	public boolean runningLearningPhase() {
+		return currentLearningPhase != null;
+	}
 	
 
 	
@@ -315,6 +322,10 @@ public class Interface {
 			}
 		for(int i = 0; i<amountOfSemesters;i++) {
 			semesters.add(new Semester(dataArray[i]));
+			//add running learningPhase
+			if(currentLearningPhase == null) {
+				currentLearningPhase = semesters.get(i).getRunningLearningPhase();
+			}
 			Subject[] subjectsOfSemester = semesters.get(i).getSubjects();
 			for(int subjectIndex = 0; subjectIndex < subjectsOfSemester.length;subjectIndex++) {
 				subjects.add(subjectsOfSemester[subjectIndex]);
@@ -337,6 +348,8 @@ public class Interface {
 		Semester currentSemester = getSemester(semester);
 		currentSemester.addLearningPhase(subjectName, start, end);
 	}
+
+	
 
 	
 	

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 //the starting Monday is safed as date
-public class Week extends Date{
+public class Week extends TimePeriod{
 	
 	int numberInSemester;
 	ArrayList<LearningPhase> learningPhases;
@@ -17,7 +17,8 @@ public class Week extends Date{
 	}
 	
 	public Week(Date startMonday, int numberInSemester) {
-		super (startMonday.getYear(),startMonday.getMonth(),startMonday.getDate());
+		super (startMonday.getYear(),startMonday.getMonth(),startMonday.getDate(),startMonday.getYear(),startMonday.getMonth(),startMonday.getDate()+7);
+		setEndTime(getEndDate().getTime()-1);
 		this.numberInSemester = numberInSemester;
 		learningPhases = new ArrayList<LearningPhase>();
 	}
@@ -82,24 +83,17 @@ public class Week extends Date{
 		return outPut;
 	}
 	
-	
 	/**
-	 * @param tag
-	 * @return The Monday of the week where tag is included
+	 * returns runningLearningPhase
+	 * @return if present running Learning Phase it will be returned else null
 	 */
-	private static Date getMonday(Date tag) {
-		//Montag finden
-				Date Monday;
-				int day = tag.getDay();
-				
-				//Da in der Date Klasse Sonntag an stelle 0 ist rücken wir hiermit den Montag auf stelle null
-				if(day == 0)// wenn sonntag = 6
-					day = 6;
-				else //initial für tag um eins nach hinten schieben um montag an 0 zu haben
-					day -= 1;
-				
-				Monday = new Date(tag.getYear(),tag.getMonth(),tag.getDate()-day);
-				return Monday;
+	public LearningPhase getRunningLearningPhase() {
+		for(int i = 0; i<learningPhases.size();i++) {
+			if(!learningPhases.get(i).ended()) {
+				return learningPhases.get(i);
+			}
+		}
+		return null;
 	}
 	
 	private static Date getMonday(int year,int month, int date) {
@@ -128,8 +122,10 @@ public class Week extends Date{
 	}
 	
 	public Week(String[] data) {
+		super(data[0]);
+		Date endDate = new Date(getYear(),getMonth(),getDate()+7,0,0,-1);
+		setEndTime(endDate);
 		String[] dataSplitted = data[0].split(";");
-		setTime(Long.parseLong(dataSplitted[1]));
 		numberInSemester = Integer.parseInt(dataSplitted[2]);
 		learningPhases = new ArrayList<LearningPhase>();
 		for(int i = 1; i<data.length;i++) {
@@ -146,4 +142,6 @@ public class Week extends Date{
 		}
 		return outPut;
 	}
+
+	
 }

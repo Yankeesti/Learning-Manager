@@ -80,7 +80,7 @@ public class TestBench {
 		test = new TimePeriod(start2,end2);
 		System.out.println(p.compareTo(test));
 		
-		//-1
+		//-2
 		start2 = new Date(2025-1900, 2, 1);
 		end2 = new Date(2026-1900, 5, 1);
 		test = new TimePeriod(start2,end2);

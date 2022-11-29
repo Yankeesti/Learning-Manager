@@ -4,29 +4,24 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class LearningPhase extends Date{
-
-	Date ended;
+public class LearningPhase extends TimePeriod{
 	long learned;// Time learned in Seconds
 	String subject;
 	
 	public LearningPhase(String subject) {
-		super();
-		setTime(getAktDate().getTime());
+		super(getAktDate());
 		this.subject = subject;
 	}
 	
 	public LearningPhase(String subject, Date start, Date end) {
-		super();
-		setTime(start.getTime());
+		super(start,end);
 		this.subject = subject;
-		ended = end;
 		learned =  (end.getTime()-start.getTime())/1000;
 	}
 	
 	public void finish() {
-		ended = getAktDate();
-		learned =  (ended.getTime()-getTime())/1000;
+		setEndTime(getAktDate());
+		learned =  getDiffrence()/1000;
 		
 	}
 	
@@ -34,18 +29,7 @@ public class LearningPhase extends Date{
 		return learned;
 	}
 
-	private Date getAktDate() {
-		Date outPut = new Date();
-		LocalDateTime now = LocalDateTime.now();  
-		
-		outPut.setYear(now.getYear()-1900);
-		outPut.setMonth(now.getMonthValue());
-		outPut.setHours(now.getHour());
-		outPut.setMinutes(now.getMinute());
-		outPut.setSeconds(now.getSecond());
-		
-		return outPut;
-	}
+	
 
 	public String getSubjectName() {
 		return subject;
@@ -59,18 +43,9 @@ public class LearningPhase extends Date{
 	 * @param data
 	 */
 	public LearningPhase(String data,boolean p) {
-		super();
+		super(data);
 		String[] dataSplitted = data.split(";");
-		
-		setTime(Long.parseLong(dataSplitted[1]));
-		
-		long endedTime = Long.parseLong(dataSplitted[2]);
-		if(endedTime != -1) {
-		ended = new Date();
-		ended.setTime(endedTime);}
-		
 		learned = Long.parseLong(dataSplitted[3]);
-		
 		subject = dataSplitted[4];
 	}
 	
@@ -81,10 +56,14 @@ public class LearningPhase extends Date{
 	 */
 	public String dataToString() {
 		long endedTime;
-		if(ended != null)
-			endedTime = ended.getTime();
+		if(endDate != null)
+			endedTime = endDate.getTime();
 		else
 			endedTime = -1;
 		return "LP;"+getTime()+";"+endedTime+";"+learned+";"+subject;
+	}
+
+	public boolean ended() {
+		return (endDate != null);
 	}
 }
