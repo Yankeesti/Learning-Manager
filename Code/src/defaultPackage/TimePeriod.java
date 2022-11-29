@@ -17,6 +17,11 @@ public class TimePeriod extends Date{
 		setTime(startDate.getTime());
 	}
 	
+	public TimePeriod(long Time) {
+		super();
+		setTime(Time);
+	}
+	
 	public TimePeriod(int startYear, int startMonth, int startDate) {
 		super(startYear,startMonth,startDate);
 	}

@@ -76,6 +76,28 @@ public class Interface {
 		return true;
 	}
 	
+	/**
+	 * starts a Break in the current learningPhase
+	 * @return true if action worked and false if not
+	 */
+	public boolean startBreak() {
+		if(currentLearningPhase == null) {
+			return false;
+		}
+		return currentLearningPhase.startBreak();
+	}
+	
+	/**
+	 * end LearningPhase Break
+	 * @return true if action worked and false if not
+	 */
+	public boolean endBreak() {
+		if(currentLearningPhase == null) {
+			return false;
+		}
+		return currentLearningPhase.endBreak();
+	}
+	
 	//Semester
 	public void addSemester(int semester, Date semesterStart, Date semesterEnd) {
 		Semester newSemester = new Semester(semester, semesterStart, semesterEnd); 

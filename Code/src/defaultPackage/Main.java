@@ -21,39 +21,47 @@ public class Main {
 		while(true) {
 			System.out.println("\nwas möchten sie tuen\n");
 			System.out.println("1 : Lern Phase starten");
-			System.out.println("2 : Lern Phase beenden");
-			System.out.println("3 : neues Semester Hinzufuegen");
-			System.out.println("4 : neues Fach Hinzufuegen");
-			System.out.println("5 : Wochen Ziel für ein Fach ändern");
-			System.out.println("6 : Zeige Wochen Fortschritt");
-			System.out.println("7 : Daten Speichern");
-			System.out.println("8 : Program abrechen");
+			System.out.println("2 : Lern Phase pausieren");
+			System.out.println("3 : Pause beenden");
+			System.out.println("4 : Lern Phase beenden");
+			System.out.println("5 : neues Semester Hinzufuegen");
+			System.out.println("6 : neues Fach Hinzufuegen");
+			System.out.println("7 : Wochen Ziel für ein Fach ändern");
+			System.out.println("8 : Zeige Wochen Fortschritt");
+			System.out.println("9 : Daten Speichern");
+			System.out.println("10 : Program abrechen");
 			
 			
-			int auswahl = abfrageInt("",1,8);
+			int auswahl = abfrageInt("",1,10);
 			switch(auswahl) {
 			case 1:
 				startLearningPhase();
 				break;
 			case 2:
-				finishLearningPhase();
+				startBreak();
 				break;
 			case 3:
-				addNewSemester();
+				endBreak();
 				break;
 			case 4:
-				addNewSubject();
+				finishLearningPhase();
 				break;
 			case 5:
-				changeWeekGoal();
+				addNewSemester();
 				break;
 			case 6:
-				showWeekProgress();
+				addNewSubject();
 				break;
 			case 7:
-				safeData();
+				changeWeekGoal();
 				break;
 			case 8:
+				showWeekProgress();
+				break;
+			case 9:
+				safeData();
+				break;
+			case 10:
 				break end;
 			
 			
@@ -65,6 +73,11 @@ public class Main {
 
 	
 	
+	
+
+
+
+
 	//Methods to use interface
 	
 	public static void startLearningPhase() {
@@ -80,6 +93,17 @@ public class Main {
 			System.err.println("\nThere is already a running Learning Phase\n");
 	}
 	
+	private static void startBreak() {
+		if(!study.startBreak())
+			System.err.println("etwas ist schief gelaufen");
+		
+	}
+	
+	private static void endBreak() {
+		if(!study.endBreak())
+			System.err.println("etwas ist schiefgelaufen");
+	}
+
 	private static void finishLearningPhase() {
 		if(study.finishLearningPhase()) {
 			System.out.println("\nLernPhase wurde beendet");
