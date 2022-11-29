@@ -4,35 +4,30 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class LearningPhase {
+public class LearningPhase extends Date{
 
-	Date started;
 	Date ended;
 	long learned;// Time learned in Seconds
-	ArrayList<String> notes;
 	String subject;
 	
 	public LearningPhase(String subject) {
-		started = getAktDate();
-		notes = new ArrayList<String>();
+		super();
+		setTime(getAktDate().getTime());
 		this.subject = subject;
 	}
 	
 	public LearningPhase(String subject, Date start, Date end) {
+		super();
+		setTime(start.getTime());
 		this.subject = subject;
-		started = start;
 		ended = end;
 		learned =  (end.getTime()-start.getTime())/1000;
 	}
 	
 	public void finish() {
 		ended = getAktDate();
-		learned =  (ended.getTime()-started.getTime())/1000;
+		learned =  (ended.getTime()-getTime())/1000;
 		
-	}
-
-	public void addNote(String note) {
-		notes.add(note);
 	}
 	
 	public long getLearned() {
@@ -64,13 +59,15 @@ public class LearningPhase {
 	 * @param data
 	 */
 	public LearningPhase(String data,boolean p) {
+		super();
 		String[] dataSplitted = data.split(";");
 		
-		started = new Date();
-		started.setTime(Long.parseLong(dataSplitted[1]));
+		setTime(Long.parseLong(dataSplitted[1]));
 		
+		long endedTime = Long.parseLong(dataSplitted[2]);
+		if(endedTime != -1) {
 		ended = new Date();
-		ended.setTime(Long.parseLong(dataSplitted[2]));
+		ended.setTime(endedTime);}
 		
 		learned = Long.parseLong(dataSplitted[3]);
 		
@@ -79,9 +76,15 @@ public class LearningPhase {
 	
 	/**
 	 * outPuts data of learning Phase in the following order LP:started;ended;learned;subject
+	 * when ended is = -1 the phase didn't end yet
 	 * @return data of object
 	 */
 	public String dataToString() {
-		return "LP;"+started.getTime()+";"+ended.getTime()+";"+learned+";"+subject;
+		long endedTime;
+		if(ended != null)
+			endedTime = ended.getTime();
+		else
+			endedTime = -1;
+		return "LP;"+getTime()+";"+endedTime+";"+learned+";"+subject;
 	}
 }

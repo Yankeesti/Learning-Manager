@@ -38,15 +38,16 @@ public class Week extends Date{
 		return outPut;
 	}
 
-	public void addLearningPhase(LearningPhase currentLearningPhase) {
-		learningPhases.add(currentLearningPhase);
+	public void addLearningPhase(LearningPhase learningPhase) {
+		learningPhases.add(learningPhase);
 	}
 	
+	
 	/**
-	 * 
-	 * @return 0 when Day is included in this week and when not the numbers of Weeks from here where p is included
+	 * Compares the Date p to the Week
+	 * @return the Number of Weeks from this Week where p is Included
 	 */
-	public int dayIncluded(Date p) {
+	public int compareTo(Date p) {
 		p = getMonday(p);
 		//same Week
 		if(equals(p)) {

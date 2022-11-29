@@ -24,12 +24,13 @@ public class Main {
 			System.out.println("2 : Lern Phase beenden");
 			System.out.println("3 : neues Semester Hinzufuegen");
 			System.out.println("4 : neues Fach Hinzufuegen");
-			System.out.println("5 : WochenZiel für ein Fach ändern");
-			System.out.println("6 : Daten Speichern");
-			System.out.println("7 : Program abrechen");
+			System.out.println("5 : Wochen Ziel für ein Fach ändern");
+			System.out.println("6 : Zeige Wochen Fortschritt");
+			System.out.println("7 : Daten Speichern");
+			System.out.println("8 : Program abrechen");
 			
 			
-			int auswahl = abfrageInt("");
+			int auswahl = abfrageInt("",1,8);
 			switch(auswahl) {
 			case 1:
 				startLearningPhase();
@@ -47,9 +48,12 @@ public class Main {
 				changeWeekGoal();
 				break;
 			case 6:
-				safeData();
+				showWeekProgress();
 				break;
 			case 7:
+				safeData();
+				break;
+			case 8:
 				break end;
 			
 			
@@ -60,16 +64,7 @@ public class Main {
 	
 
 	
-
-
 	
-
-	
-
-	
-
-	
-
 	//Methods to use interface
 	
 	public static void startLearningPhase() {
@@ -146,6 +141,14 @@ public class Main {
 		int auswahl = abfrageInt("", 1, subjects.length);
 		
 		study.setWeekGoal(subjects[auswahl-1].getSemester(), subjects[auswahl-1].getSubjectName(), abfrageInt("Wie viele Minuten möchten sie pro woche für "+subjects[auswahl-1].getSubjectName()+" lernen?"));
+	}
+	
+	private static void showWeekProgress() {
+		String[][] progress = study.getWeekProgress();
+		System.out.println();
+		for(String[] p: progress) {
+			System.out.println(p[0]+": Lernziel: "+p[1]+" Minuten ; gelernt: "+Integer.parseInt(p[2])+" Minuten");
+		}
 	}
 	
 	private static void safeData() {

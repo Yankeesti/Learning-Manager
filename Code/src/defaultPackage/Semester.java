@@ -25,7 +25,7 @@ public class Semester extends Date{
 		this.semester = semester;
 		this.semesterEnd = semesterEnd;
 		Date startMonday = getMonday(semesterStart);
-		weeks = new Week[berechnungWochenAnzahl(semesterStart, semesterEnd)];
+		weeks = new Week[calculateWeekAmount()];
 		for(int i = 0; i<weeks.length; i++) {
 			weeks[i] = new Week(startMonday,i);
 			startMonday.setDate(startMonday.getDate()+7);
@@ -62,8 +62,8 @@ public class Semester extends Date{
 	 * adds p to subjects
 	 * @param p
 	 */
-	public void addSubject(Subject p) {
-		subjects.add(p);
+	public void addSubject(Subject subject) {
+		subjects.add(subject);
 	}
 	
 	public int getSemester() {
@@ -75,7 +75,7 @@ public class Semester extends Date{
 	 * @return the Week where p is in and null when the week isn't in this Semester
 	 */
 	public Week getWeek(Date p) {
-		int weeksAppart = weeks[0].dayIncluded(p);
+		int weeksAppart = weeks[0].compareTo(p);
 		if(weeksAppart>= 0 && weeksAppart < weeks.length) { //Date is in this Semester
 			return weeks[weeksAppart];
 		}
@@ -100,10 +100,10 @@ public class Semester extends Date{
 	 * @param tag
 	 * @return denn Montag welcher in der gleichen woche liegt wie tag
 	 */
-	private Date getMonday(Date tag) {
+	private Date getMonday(Date pDay) {
 		//Montag finden
 				Date Monday;
-				int day = tag.getDay();
+				int day = pDay.getDay();
 				
 				//Da in der Date Klasse Sonntag an stelle 0 ist rücken wir hiermit den Montag auf stelle null
 				if(day == 0)// wenn sonntag = 6
@@ -111,7 +111,7 @@ public class Semester extends Date{
 				else //initial für tag um eins nach hinten schieben um montag an 0 zu haben
 					day -= 1;
 				
-				Monday = new Date(tag.getYear(),tag.getMonth(),tag.getDate()-day);
+				Monday = new Date(pDay.getYear(),pDay.getMonth(),pDay.getDate()-day);
 				return Monday;
 	}
 	
@@ -120,8 +120,8 @@ public class Semester extends Date{
 	 * @param semesterEnd
 	 * @return anzahl ganzer Wochen im angegeben Zeitraum
 	 */
-	private int berechnungWochenAnzahl(Date semesterStart, Date semesterEnd) {
-		Date startMonday = getMonday(semesterStart);
+	private int calculateWeekAmount() {
+		Date startMonday = getMonday(this);
 		Date endMonday = getMonday(semesterEnd);
 		int anzahl = 0;
 		
@@ -144,6 +144,11 @@ public class Semester extends Date{
 		}
 		return null;
 	}
+	
+	public void addLearningPhase(LearningPhase learningPhase) {
+		getWeek(learningPhase).addLearningPhase(learningPhase);
+	}
+	
 	
 	//Methods to safe and load Data
 	
@@ -172,7 +177,7 @@ public class Semester extends Date{
 		//Subjects
 		outPut[1] = new String[1][subjects.size()];
 		for(int i = 0 ; i<subjects.size();i++) {
-			outPut[1][0][i] = subjects.get(i).DataToString();
+			outPut[1][0][i] = subjects.get(i).dataToString();
 		}
 		
 		//Weeks
@@ -184,21 +189,7 @@ public class Semester extends Date{
 		return outPut;
 	}
 	
-	/**
-	 * returns a 3 dimensional Array of the Data in this Object
-	 * in the following order
-	 * [0][0][0] = SEB;semester;semesterStart;semesterEnd;amount of Subjects;amount of Weeks
-	 * [1][0][0] = Subject
-	 * [1][0][1] = Subject
-	 * [1][0][2] = Subject
-	 * [1][0][3] = Subject
-	 * ...
-	 * [2][0] = Week
-	 * [2][2] = Week
-	 * [2][3] = Week
-	 * 
-	 * @return
-	 */
+
 	public Semester(String[][][] data) {
 		super();
 		String[] dataSplitted = data[0][0][0].split(";");
@@ -210,7 +201,7 @@ public class Semester extends Date{
 		//Creating subjects
 		subjects = new ArrayList<Subject>();
 		for(int i = 0; i< data[1][0].length;i++) {
-			subjects.add(new Subject(data[1][0][i], false));
+			subjects.add(new Subject(data[1][0][i]));
 		}
 		
 		//Creating Weeks

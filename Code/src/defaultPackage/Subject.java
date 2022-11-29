@@ -6,70 +6,14 @@ public class Subject {
 	int weekGoal; //safes the learning goal in Minutes
 	int learnedThisWeek; //how much was learnd this weak in minutes
 	String subjectName;
-	ArrayList<Homework> homework;
 	ArrayList<LearningPhase> learningPhases;
-	ArrayList<Appointment> appointments;
-	LearningPhase aktLPhase;
 	int semester ;
 	
+	
 	Subject(String subjectName , int semester){
-		homework = new ArrayList<Homework>();
 		learningPhases = new ArrayList<LearningPhase>();
-		appointments = new ArrayList<Appointment>();
-		aktLPhase = null;
 		this.subjectName = subjectName;
 		this.semester = semester;
-		
-	}
-	
-	
-	
-	public LearningPhase startLearningPhase() {
-		aktLPhase = new LearningPhase(subjectName);
-		learningPhases.add(aktLPhase);
-		return aktLPhase;
-	}
-	/**
-	 * 
-	 * @return true when AktLPhase is not null
-	 */
-	public boolean endLearningPhase() {
-		if(aktLPhase == null)return false;
-		aktLPhase.finish();
-		return true;
-	}
-	
-	/**
-	 * Adds a Note to aktLPhase 
-	 * @return true when AktLPhase is not null
-	 */
-	public boolean addNote(String note) {
-		if(aktLPhase == null)return false;
-		aktLPhase.addNote(note);
-		return true;
-	}
-	
-	/**
-	 * adds a Appointment to the Subject
-	 * @param a
-	 */
-	public void addAppointment(Appointment a) {
-		appointments.add(a);
-	}
-	
-	public Appointment[] getAppointments() {
-		Appointment[] output = new Appointment[appointments.size()];
-		
-		for(int i = 0; i<output.length;i++) {
-			output[i] = appointments.get(i);
-		}
-		return output;
-	}
-	/**
-	 * updates the learned Time
-	 */
-	private void upDateLearned() {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -78,6 +22,7 @@ public class Subject {
 	public String getSubjectName() {return subjectName;}
 	public void setWeekGoal(int goal) { weekGoal = goal; }
 	public int getSemester() {return semester;}
+	public int getWeekGoal() {return weekGoal;}
 	
 	//Methodes to safe and load Data
 	
@@ -86,11 +31,8 @@ public class Subject {
 	 * @param data in this order SUB;finalgrade;weekGoal;learnedThisWeek;subjectName
 	 * @param p is irrelevant and just to adresse the right konstructor
 	 */
-	Subject(String data,boolean p){
-		homework = new ArrayList<Homework>();
+	Subject(String data){
 		learningPhases = new ArrayList<LearningPhase>();
-		appointments = new ArrayList<Appointment>();
-		aktLPhase = null;
 		//SUB;finalgrade;weekGoal;learnedThisWeek;subjectName
 		String[] dataSplitted = data.split(";");
 		finalGrade = Double.parseDouble(dataSplitted[1]);
@@ -107,7 +49,7 @@ public class Subject {
 	 * 
 	 * @return Array of Strings with the data
 	 */
-	public String DataToString() {
+	public String dataToString() {
 		String outPut = "SUB;"+finalGrade+";"+weekGoal+";"+learnedThisWeek+";"+subjectName+";"+semester;
 		return outPut;
 	}
@@ -118,7 +60,6 @@ public class Subject {
 	 */
 	public LearningPhase addLearningPhase(LearningPhase p) {
 		learningPhases.add(p);
-		upDateLearned();
 		return p;
 	}
 

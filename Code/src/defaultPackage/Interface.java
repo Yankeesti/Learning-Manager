@@ -12,19 +12,68 @@ import java.util.Date;
 
 public class Interface {
 
-	ArrayList<Semester> semesters;
-	ArrayList<Subject> subjects;
-	Week currentWeek;
-	Semester currentSemester;
+	private ArrayList<Semester> semesters;
+	private ArrayList<Subject> subjects;
+	private Week currentWeek;
+	private Semester currentSemester;
 	
 	//there is only one learning phase possible at the time
-	LearningPhase currentLearningPhase;  
+	private LearningPhase currentLearningPhase;  
 	
 	
 	Interface(){
 		semesters = new ArrayList<Semester>();
 		subjects = new ArrayList<Subject>();
 		upDateWeek();
+	}
+	
+	/**
+	 * starts a learning phase if subject is a existent subject 
+	 * an no learning phase is started yet.
+	 * @param subject
+	 * @return true when learning Phase can be started (no other learning phase is started and subject is a existent Subject)
+	 */
+	public boolean startLearningPhase(String subjectName) {
+		upDateWeek();
+		//Checking weather learning phase can be started
+		if(currentLearningPhase != null)
+			//when there is already a LearningPhase started
+			return false; 
+		
+		//Checking if subject is a existent subject
+		Subject subject = null;
+		for(int i = 0; i<subjects.size();i++) {
+			if(subjects.get(i).getSubjectName().equals(subjectName));
+			{subject = subjects.get(i);
+			break;
+			}
+		}
+		//returns false when there is no subject with the Name subject Name
+		if(subject == null)
+			return false;
+		
+		currentLearningPhase = new LearningPhase(subjectName);
+		
+		//add LearningPhase to Semester Week and Subject
+		
+		subject.addLearningPhase(currentLearningPhase);
+		
+		getSemester(subject.getSemester()).addLearningPhase(currentLearningPhase);
+		
+		return true;
+	}
+	
+	/**
+	 *  When a Learning Phase is started it gets fineshed
+	 * @return true when there is a curent Learning Phase to be finished and false when not
+	 */
+	public boolean finishLearningPhase() {
+		if(currentLearningPhase == null) {
+			return false;
+		}
+		currentLearningPhase.finish();
+		currentLearningPhase = null;
+		return true;
 	}
 	
 	//Semester
@@ -47,7 +96,7 @@ public class Interface {
 	 * @param subjectName - the name of the subject
 	 */
 	public void addSubject(int semester, String subjectName) {
-		Semester currentSemester = findSemester(semester);
+		Semester currentSemester = getSemester(semester);
 		
 		
 		if(currentSemester != null) {
@@ -59,7 +108,7 @@ public class Interface {
 	}
 	
 	public void setWeekGoal(int semester, String subjectName, int weekGoal) {
-		Semester currentSemester = findSemester(semester);
+		Semester currentSemester = getSemester(semester);
 		
 		if(currentSemester != null) {
 			if(!currentSemester.setWeekGoal(subjectName, weekGoal)) 
@@ -69,60 +118,51 @@ public class Interface {
 		}
 	}
 	
-	
-	
 	/**
-	 * starts a learning phase if subject is a existent subject 
-	 * an no learning phase is started yet.
-	 * @param subject
-	 * @return true when learning Phase can be started (no other learning phase is started and subject is a existent Subject)
+	 * 	Calculates the progress and gives out a array of String with the following order
+	 * 	[0][0] = subject Name
+	 * 	[0][1] = week Goal
+	 * 	[0][2] = learned this Week
+	 * 	
+	 * 	[1][0] = subject Name
+	 * 	[1][1] = week Goal
+	 * 	[1][2] = learned this Week
+	 * ...
+	 * @return week Progress
 	 */
-	public boolean startLearningPhase(String subject) {
+	public String[][] getWeekProgress() {
 		upDateWeek();
-		//Checking weather learning phase can be started
-		if(currentLearningPhase != null)
-			//when there is already a LearningPhase started
-			return false; 
+		Subject[] subjectsInSemester = currentSemester.getSubjects();
 		
-		//Checking if subject is a existent subject
-		boolean subjectExcistent = false;
-		for(int i = 0; i<subjects.size();i++) {
-			if(subjects.get(i).getSubjectName().equals(subject));
-			{subjectExcistent = true;
-			break;
-			}
+		String[][] outPut = new String[subjectsInSemester.length][3];
+		
+		for(int i =0 ; i<outPut.length;i++) {
+			outPut[i][0] = subjectsInSemester[i].getSubjectName();
+			outPut[i][1] = ""+subjectsInSemester[i].getWeekGoal();
+			outPut[i][2] = ""+currentWeek.learnedFor(outPut[i][0])/60;
 		}
-		//When subject isn't a Subject that is already existent
-		if(!subjectExcistent)
-			return false;
-		
-		Subject currentSubject = null;
-		//starting learningPhase
-		for(int i = 0; i< subjects.size();i++) {
-			if(subjects.get(i).getSubjectName().equals(subject)) {
-				currentSubject = subjects.get(i);
-				break;}
+		return outPut;
+	}
+	
+	public Subject[] getSubjects() {
+		Subject[] outPut = new Subject[subjects.size()];
+		for(int i = 0; i<outPut.length;i++) {
+			outPut[i] = subjects.get(i);
 		}
-		
-		//start learning phase and safe it
-		currentLearningPhase = currentSubject.startLearningPhase();
-		//add learning phase to Week
-		((Week) currentWeek).addLearningPhase(currentLearningPhase);
-		return true;
+		return outPut;
 	}
 	
 	/**
-	 *  When a Learning Phase is started it gets fineshed
-	 * @return true when there is a curent Learning Phase to be finished and false when not
+	 * Returns all Subject of the Current Semester
+	 * @return Array of all Subjects in the Current Semester
 	 */
-	public boolean finishLearningPhase() {
-		if(currentLearningPhase == null) {
-			return false;
-		}
-		currentLearningPhase.finish();
-		currentLearningPhase = null;
-		return true;
+	public Subject[] getCurrentSubjects() {
+		return currentSemester.getSubjects();
 	}
+	
+
+	
+	
 	
 	/**
 	 * Updates the current Week and Semester
@@ -133,7 +173,7 @@ public class Interface {
 		boolean weekRight = false;
 		//test if new Week has begun
 		if(currentWeek != null) {
-			if(currentWeek.dayIncluded(aktDate) == 0) {
+			if(currentWeek.compareTo(aktDate) == 0) {
 				weekRight = true;
 			}
 		}else 
@@ -148,13 +188,7 @@ public class Interface {
 			}
 	}
 	
-	/**
-	 * Returns all Subject of the Current Semester
-	 * @return Array of all Subjects in the Current Semester
-	 */
-	public Subject[] getCurrentSubjects() {
-		return currentSemester.getSubjects();
-	}
+	
 	
 	
 	/**
@@ -173,24 +207,8 @@ public class Interface {
 		
 		return outPut;
 	}
+
 	
-	private Semester findSemester(int semester) {
-		for(int i = 0; i < semesters.size();i++) {
-			if(semesters.get(i).getSemester() == semester)
-			{
-				return semesters.get(i);
-			}
-		}
-		return null;
-	}
-	
-	public Subject[] getSubjects() {
-		Subject[] outPut = new Subject[subjects.size()];
-		for(int i = 0; i<outPut.length;i++) {
-			outPut[i] = subjects.get(i);
-		}
-		return outPut;
-	}
 	
 	//Methods to safe and load Data
 	/**
@@ -305,10 +323,18 @@ public class Interface {
 		upDateWeek();
 	}
 	
+	private Semester getSemester(int semester) {
+		for(int i = 0; i< semesters.size(); i++) {
+			if(semesters.get(i).getSemester() == semester)
+				return semesters.get(i);
+		}
+		return null;
+	}
+	
 	//Methodes to test
 	
 	public void addLearningPhase(int semester, String subjectName, Date start, Date end) {
-		Semester currentSemester = findSemester(semester);
+		Semester currentSemester = getSemester(semester);
 		currentSemester.addLearningPhase(subjectName, start, end);
 	}
 
