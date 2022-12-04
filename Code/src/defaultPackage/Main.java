@@ -100,12 +100,15 @@ public class Main {
 	}
 	
 	private static void endBreak() {
-		if(!study.endBreak())
+		float breakTime = study.endBreak();
+		if(0>breakTime)
 			System.err.println("etwas ist schiefgelaufen");
+		else
+			System.out.println("Die Pause betrug : "+ breakTime/60 +"Minuten");
 	}
 
 	private static void finishLearningPhase() {
-		if(study.finishLearningPhase()) {
+		if(study.finishLearningPhase() >0 ) {
 			System.out.println("\nLernPhase wurde beendet");
 		}else {
 			System.out.println("\nes gibt keine Lern Phase zum beenden");

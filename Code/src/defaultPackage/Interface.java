@@ -16,6 +16,7 @@ public class Interface {
 	private ArrayList<Subject> subjects;
 	private Week currentWeek;
 	private Semester currentSemester;
+	private File currentFile;
 	
 	//there is only one learning phase possible at the time
 	private LearningPhase currentLearningPhase;  
@@ -65,15 +66,17 @@ public class Interface {
 	
 	/**
 	 *  When a Learning Phase is started it gets fineshed
-	 * @return true when there is a curent Learning Phase to be finished and false when not
+	 * @return the time learned in Seconds an -1 if there isnt a learning Phase to finish
 	 */
-	public boolean finishLearningPhase() {
+	public long finishLearningPhase() {
 		if(currentLearningPhase == null) {
-			return false;
+			return -1;
 		}
 		currentLearningPhase.finish();
+		long outPut = currentLearningPhase.getDiffrence()/1000;
+		
 		currentLearningPhase = null;
-		return true;
+		return outPut;
 	}
 	
 	/**
@@ -89,11 +92,11 @@ public class Interface {
 	
 	/**
 	 * end LearningPhase Break
-	 * @return true if action worked and false if not
+	 * @return time of break in second if there is no break to end -1
 	 */
-	public boolean endBreak() {
+	public long endBreak() {
 		if(currentLearningPhase == null) {
-			return false;
+			return -1;
 		}
 		return currentLearningPhase.endBreak();
 	}
@@ -236,8 +239,23 @@ public class Interface {
 		
 		return outPut;
 	}
-
 	
+	public Semester[] getSemesters() {
+		Semester[] outPut = new Semester[semesters.size()];
+		
+		for(int i = 0; i<outPut.length;i++) {
+			outPut[i] = semesters.get(i);
+		}
+		return outPut;
+	}
+
+	public LearningPhase getCurrentLearningPhase() {
+		return currentLearningPhase;
+	}
+	
+	public File getCurrentFile() {
+		return currentFile;
+	}
 	
 	//Methods to safe and load Data
 	/**
@@ -295,6 +313,7 @@ public class Interface {
 	 * @param data - file where data is stored
 	 */
 	public Interface(File data) {
+		currentFile = data;
 		semesters = new ArrayList<Semester>();
 		subjects = new ArrayList<Subject>();
 		//load data in to a String Array List

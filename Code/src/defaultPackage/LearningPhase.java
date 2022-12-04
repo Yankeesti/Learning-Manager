@@ -32,19 +32,23 @@ public class LearningPhase extends TimePeriod{
 	}
 
 	public boolean startBreak() {
-		if(currentBreak != null) {
+		if(currentBreak == null) {
 			currentBreak = new TimePeriod(getAktDate());
 		return true;}
 		return false;
 	}
-	
-	public boolean endBreak() {
+	/**
+	 * 
+	 * @return time of break in seconds and if no brak is started -1
+	 */
+	public long endBreak() {
 		if(currentBreak != null) {
 			currentBreak.setEndTime(getAktDate());
 		paused += currentBreak.getDiffrence()/1000;
+		long outPut = currentBreak.getDiffrence()/1000;
 		currentBreak = null;
-		return true;}
-		return false;
+		return outPut;}
+		return -1;
 	}
 	
 
@@ -94,6 +98,13 @@ public class LearningPhase extends TimePeriod{
 		return "LP;"+getTime()+";"+endedTime+";"+learned+";"+subject+";"+paused+";"+startedPaus; // Learning Phase is not ended yet --> Break is possible
 		return "LP;"+getTime()+";"+endedTime+";"+learned+";"+subject+";"+paused; //Learning Phase already ended --> no possible Break
 		
+	}
+	/**
+	 * 
+	 * @return true when there is a running break and false if not
+	 */
+	public boolean breakStarted() {
+		return currentBreak != null;
 	}
 
 	public boolean ended() {
